@@ -1,5 +1,6 @@
 
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,8 +21,8 @@ import 'package:provider/provider.dart';
 import 'my_account.dart';
 
 class StoreListPage extends StatefulWidget {
-  @override 
-  _StoreListPage createState() => _StoreListPage(); 
+  @override
+  _StoreListPage createState() => _StoreListPage();
 }
 
 class _StoreListPage extends State<StoreListPage> {
@@ -31,21 +32,21 @@ class _StoreListPage extends State<StoreListPage> {
 
   Widget _buildBody() {
     return StreamBuilder<QuerySnapshot>(
-      stream: _storeListVM.storeAsStream,
-      builder: (context, snapshot){
-        if(snapshot.hasData && snapshot.data.docs.isNotEmpty){
-          return _buildList(snapshot.data);
+        stream: _storeListVM.storeAsStream,
+        builder: (context, snapshot){
+          if(snapshot.hasData && snapshot.data.docs.isNotEmpty){
+            return _buildList(snapshot.data);
+          }
+          else {
+            return EmptyResultsWidget(message: Constants.NO_STORES_FOUND);
+          }
         }
-        else {
-          return EmptyResultsWidget(message: Constants.NO_STORES_FOUND);
-        }
-      }
     );
   }
 
   Widget _buildList(QuerySnapshot snapshot){
     final stores= snapshot.docs.map((doc)=> StoreViewModel.fromSnapshot(doc)).toList();
-    return ListView.builder(
+    /*return ListView.builder(
       itemCount: stores.length,
       itemBuilder: (context, index){
         final store= stores[index];
@@ -54,7 +55,29 @@ class _StoreListPage extends State<StoreListPage> {
           _navigateToStoreItems(context, store);
         });
       }
+    );*/
+
+    return GridView.count(
+      //padding: EdgeInsets.only(left: 10.0, right: 10.0),
+      crossAxisCount: 2,
+      mainAxisSpacing: 16,
+      crossAxisSpacing: 16,
+      children: List.generate(stores.length, (index) {
+        final storeItem= stores[index];
+        final store= stores[index];
+
+        return _buildListItem(store, (store){
+          _navigateToStoreItems(context, store);
+        });
+
+      }),
+
+
+
+
     );
+
+
   }
 
 
@@ -87,13 +110,13 @@ class _StoreListPage extends State<StoreListPage> {
 
   void _navigateToStoreItems(BuildContext context, StoreViewModel store)
   {
-      Navigator.push(context, MaterialPageRoute(builder: (context)=> StoreItemListPage(store, store.storeId )));
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> StoreItemListPage(store, store.storeId )));
   }
 
 
   Widget _buildListItem(StoreViewModel store,   void Function(StoreViewModel)  onStoreSelected)
   {
-/*    return ListTile(
+   /* return ListTile(
       title: Text(store.resturantName, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
       subtitle: Text(store.imagePath),
       trailing: Icon(Icons.arrow_forward_ios),
@@ -104,37 +127,39 @@ class _StoreListPage extends State<StoreListPage> {
 
     return GestureDetector(
       child: Container(
-        //color: Colors.grey,
-        margin: EdgeInsets.symmetric(vertical: 10.0),
+
+
+        // color: Colors.grey,
+        //margin: EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15.0),
           border: Border.all(
             width: 1.0,
-            color: Colors.grey[300],
+            color: Colors.grey[400],
           ),
         ),
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget> [
             ClipRRect(
               borderRadius: BorderRadius.circular(15.0),
               child: Image(
-                height: 150.0,
-                width: 150.0,
+                height: 100.0,
+                width: 152.0,
                 image: NetworkImage(store.imagePath),
                 fit: BoxFit.cover,
               ),
             ),
             Expanded(
-              flex: 3,
+
               child: Container(
-                margin: EdgeInsets.only(left: 15.0, right: 12.0),
+                margin: EdgeInsets.only(left: 15.0),
                 child: Column(
                   //mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                   /* ListTile(
+                    /* ListTile(
                       leading: Icon(Icons.home),
                       title: Text(
                         store.resturantName,
@@ -145,43 +170,43 @@ class _StoreListPage extends State<StoreListPage> {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),*/
-
+                    SizedBox(height: 5.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget> [
                         Container(
                           //color: Colors.green,
-                          child: Icon(Icons.home,
-                            size: 20.0
-                          )),
+                            child: Icon(Icons.home,
+                                size: 12.0
+                            )),
                         SizedBox(width: 10.0),
                         Expanded(
                           flex: 2,
                           child: Container(
-                          //color: Colors.blue,
-                          child: Text(
-                            store.resturantName,
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
+                            //color: Colors.blue,
+                            child: Text(
+                              store.resturantName,
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),),
+                          ),),
                       ],
                     ),
                     //RatingStars(restaurant.rating),
 
-                    SizedBox(height: 4.0),
+                    //SizedBox(height: 4.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget> [
                         Container(
-                            //color: Colors.green,
+                          //color: Colors.green,
                             child: Icon(Icons.location_on_sharp,
-                              size: 16.0,
+                              size: 12.0,
                             )),
-                        SizedBox(width: 13.0),
+                        SizedBox(width: 10.0),
                         Expanded(
                           flex: 2,
                           child: Container(
@@ -189,7 +214,7 @@ class _StoreListPage extends State<StoreListPage> {
                             child: Text(
                               store.location,
                               style: TextStyle(
-                                fontSize: 16.0,
+                                fontSize: 12.0,
                                 fontWeight: FontWeight.w600,
                               ),
                               overflow: TextOverflow.ellipsis,
@@ -197,30 +222,54 @@ class _StoreListPage extends State<StoreListPage> {
                           ),),
                       ],
                     ),
-                    SizedBox(height: 4.0),
-                    Padding(
-                      padding: EdgeInsets.only(left: 3.0,),
-                      child: Text(
-                        '0.2 miles away',
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
+                    //SizedBox(height: 4.0),
 
-                    SizedBox(height: 4.0),
-                    Padding(
-                      padding: EdgeInsets.only(left: 3.0, top: 5.0),
-                      child: Text(
-                        store.offer != "0" ? "Offer "+ store.offer : "",
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w600,
+                    Row(
+                      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget> [
+                        Padding(
+                          padding: EdgeInsets.only(left: 3.0),
+                          child: Text(
+                            '0.2 miles away',
+                            //textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+
+                        //SizedBox(height: 4.0),
+
+                        SizedBox(width: 10.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget> [
+                            Container(
+                              //color: Colors.green,
+                                child: Icon(Icons.discount,
+                                  size: 12.0,
+                                )),
+
+                            SizedBox(width: 5.0),
+                            Padding(
+                              padding: EdgeInsets.only(left: 3.0, top: 5.0),
+                              child: Text(
+                                //store.offer != "0" ? "Offer "+ store.offer : "",
+
+                                store.offer != "0" ?  store.offer : "",
+                                style: TextStyle(
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        )
+
+                      ],
                     ),
 
 
@@ -263,10 +312,10 @@ class _StoreListPage extends State<StoreListPage> {
 
   void _navigateToAddStorePage(BuildContext context) {
     Navigator.push(context, MaterialPageRoute(builder: (context)=> ChangeNotifierProvider(
-            create: (context)=> AddStoreViewModel(),
-            child: AddStorePage(userId: loggedInUser.uid),
+      create: (context)=> AddStoreViewModel(),
+      child: AddStorePage(userId: loggedInUser.uid),
 
-        )
+    )
 
 
     ));
@@ -274,22 +323,19 @@ class _StoreListPage extends State<StoreListPage> {
 
 
 
-MyProvider myProvider;
+  MyProvider myProvider;
 
 
 //----------------------------------------->> Building recent orders list <<-----------------------------------
   Widget _buildBottomPart(context) {
     return Expanded(
       flex: 2,
-      child: Container(
-        //padding: EdgeInsets.symmetric(horizontal: 20),
-        //color: Color(0xfff2f3f4),
-        //color: Colors.blue,
+      child: SingleChildScrollView(
         child: Column(
           children: [
             Container(
               width: double.infinity,
-              //color: Colors.green,
+              // color: Colors.green,
               height: 90,
 
               child: Column(
@@ -311,7 +357,7 @@ MyProvider myProvider;
                 ],
               ),
             ),
-       /*     SizedBox(
+            /*     SizedBox(
               height: 10,
             ),*/
 
@@ -327,7 +373,7 @@ MyProvider myProvider;
     return Container(
 
       margin: EdgeInsets.all(10.0),
-      width: 250.0,
+      width: 230.0,
       decoration: BoxDecoration(
         //color: Colors.orange,
         //color: Colors.white,
@@ -349,7 +395,7 @@ MyProvider myProvider;
                     height: 100.0,
                     width: 100.0,
                     image: NetworkImage(image),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                   ),
                 ),
                 Expanded(
@@ -426,7 +472,7 @@ MyProvider myProvider;
       child: Column(
         children: [
           Container(
-            margin: EdgeInsets.only(left: 16, bottom: 20.0),
+            margin: EdgeInsets.only(left: 16, bottom: 10.0),
             height: 40,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -448,11 +494,11 @@ MyProvider myProvider;
             ),
           ),
           Container(
-            margin: EdgeInsets.only(bottom: 20.0),
+            margin: EdgeInsets.only(bottom: 15.0),
             //color: Colors.yellow,
 
             //color: Colors.green,
-      
+
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
@@ -495,7 +541,7 @@ MyProvider myProvider;
           ),
 
 
-        /*  Container(
+          /*  Container(
             margin: EdgeInsets.only(bottom: 15.0, top: 0.0, left: 16.0, right: 16.0),
             padding: EdgeInsets.only(top: 0.0),
             child: TextFormField(
@@ -579,7 +625,7 @@ MyProvider myProvider;
 
           ListTile(
             onTap: () {
-               Navigator.of(context).pushReplacement(
+              Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (ctx) => MyAccount(),
                 ),
@@ -595,7 +641,7 @@ MyProvider myProvider;
 
           ListTile(
             onTap: () {
-             /* Navigator.of(context).pushReplacement(
+              /* Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (ctx) => About(),
                 ),
@@ -650,109 +696,71 @@ MyProvider myProvider;
 
       key: _scaffoldKey,
       drawer: _buildMyDrawer(context),
-        body: SafeArea(
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 0.0),
-            //color: Colors.green,
-            child: Column(
-              //mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget> [
+      body: SafeArea(
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 0.0),
+          //---------------------------------------------------->> Main Background to all <<---------------
+          child: Column(
+            //mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget> [
+
+              //------------>> Header-section Top [profile] part <<--------------
+              _buildTopPart(context),
+              //-----------------------------------------------------------------
 
 
-                _buildTopPart(context),
+              SizedBox(height: 10.0,),
 
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    width: double.infinity,
-                    //color: Colors.yellow,
-                    child: Column(
-                      //mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget> [
+              Expanded(
+                flex: 30,
+                child: Container(
+                  //color: Colors.red,
+                  margin: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    //mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
 
-/*
-                        Expanded(
-                          flex: 3,
-                          child: Column(
-                            children: <Widget> [
+                      Text(
+                        'Recent Orders',
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                      _buildBottomPart(context),
 
-                              Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget> [Text(loggedInUser.secondName ?? ""),
-                                Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: GestureDetector(
-                                  child: Icon(Icons.add),
-                                  onTap: () {
-                                    _navigateToAddStorePage(context);
-                                  },
-                                ),
-                              ), ]),
-                              Text(loggedInUser.firstName ?? ""),
-                              Text(loggedInUser.email ?? ""),
-                              Text(loggedInUser.uid ?? ""),
-                            ],
-                          ),
-                        ),*/
+                      SizedBox(height: 5.0),
+                      Text(
+                        'Nearby Restaurants',
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                      SizedBox(height: 10.0),
+                      Expanded(
+                        flex: 7,
+                        child: Container(
 
+                            //color: Colors.red,
+                            child: _buildBody()
+                        ),
+                      ),
 
-
-                      ],
-                    ),
+                    ],
                   ),
                 ),
+              )
 
 
-
-
-               Expanded(
-                 flex: 30,
-                 child: Container(
-                   margin: EdgeInsets.symmetric(horizontal: 20.0),
-                   child: Column(
-                     //mainAxisAlignment: MainAxisAlignment.start,
-                     crossAxisAlignment: CrossAxisAlignment.start,
-                     children: <Widget>[
-
-                       Text(
-                         'Recent Orders',
-                         style: TextStyle(
-                           fontSize: 24.0,
-                           fontWeight: FontWeight.w600,
-                           letterSpacing: 1.2,
-                         ),
-                       ),
-                       _buildBottomPart(context),
-
-                       Text(
-                         'Nearby Restaurants',
-                         style: TextStyle(
-                           fontSize: 24.0,
-                           fontWeight: FontWeight.w600,
-                           letterSpacing: 1.2,
-                         ),
-                       ),
-                       Expanded(
-                         flex: 7,
-                         child: Container(
-                             margin: EdgeInsets.only(top: 00.0),
-                             //color: Colors.red,
-                             child: _buildBody()
-                         ),
-                       ),
-
-                     ],
-                   ),
-                 ),
-               )
-
-
-              ],
-            ),
+            ],
           ),
         ),
+      ),
 
     );
   }

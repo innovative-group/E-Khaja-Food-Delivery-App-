@@ -109,7 +109,7 @@ class _StoreItemListPageState extends State<StoreItemListPage> {
                   Hero(
                     tag: widget.store.imagePath,
                     child: Image(
-                      height: 220.0,
+                      height: 160.0,
                       width: MediaQuery.of(context).size.width,
                       image: NetworkImage(widget.store.imagePath),
                       fit: BoxFit.cover,
@@ -143,13 +143,18 @@ class _StoreItemListPageState extends State<StoreItemListPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        Text(
-                          widget.store.resturantName,
-                          style: TextStyle(
-                            fontSize: 22.0,
-                            fontWeight: FontWeight.w600,
+                        Expanded(
+                          child: Container(
+                            child: Text(
+                              widget.store.resturantName,
+                              style: TextStyle(
+                                fontSize: 22.0,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
                         Text(
@@ -157,15 +162,42 @@ class _StoreItemListPageState extends State<StoreItemListPage> {
                           style: TextStyle(
                             fontSize: 18.0,
                           ),
+
                         ),
                       ],
                     ),
 
                     SizedBox(height: 6.0),
-                    Text(
+                    /*Text(
                       widget.store.location,
                       style: TextStyle(fontSize: 18.0),
+                    ),*/
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget> [
+                        Container(
+                          //color: Colors.green,
+                            child: Icon(Icons.location_on_sharp,
+                              size: 16.0,
+                            )),
+                        SizedBox(width: 13.0),
+                        Expanded(
+                          flex: 2,
+                          child: Container(
+                            //color: Colors.blue,
+                            child: Text(
+                              widget.store.location,
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),),
+                      ],
                     ),
+
                   ],
                 ),
               ),
@@ -243,6 +275,7 @@ class _StoreItemListPageState extends State<StoreItemListPage> {
 
               SizedBox(height: 5.0),
               Expanded(
+
                 child: StreamBuilder<QuerySnapshot>(
                   stream: widget._storeItemListVM.storeItemsAsStream,
                   builder: (context, snapshot) {
@@ -250,17 +283,114 @@ class _StoreItemListPageState extends State<StoreItemListPage> {
 
                     final storeItems= snapshot.data.docs.map((item)=> StoreItemViewModel.fromSnapshot(item)).toList();
 
-                    return GridView.count(
-                      padding: EdgeInsets.only(left: 10.0, right: 10.0, ),
+                    /*return GridView.count(
+                      padding: EdgeInsets.only(left: 10.0, right: 10.0),
                       crossAxisCount: 2,
                         children: List.generate(storeItems.length, (index) {
                           final storeItem= storeItems[index];
-
                           return Center(
+                            child: Container(
+                              margin: EdgeInsets.all(5.0),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: <Widget>[
+                                  Container(
+                                    //margin: EdgeInsets.all(10.0),
+                                    height: 175.0,
+                                    width: 175.0,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: NetworkImage(storeItem.foodImage),
+                                        fit: BoxFit.cover,
+                                      ),
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                  ),
+                                  Container(
+                                    //margin: EdgeInsets.all(10.0),
+                                    height: 175.0,
+                                    width: 175.0,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topRight,
+                                        end: Alignment.bottomLeft,
+                                        colors: [
+                                          Colors.black.withOpacity(0.3),
+                                          Colors.black87.withOpacity(0.3),
+                                          Colors.black54.withOpacity(0.3),
+                                          Colors.black38.withOpacity(0.3),
+                                        ],
+                                        stops: [0.1, 0.4, 0.6, 0.9],
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 65.0,
+                                    child: Column(
+                                      children: <Widget>[
+                                        Text(
+                                          storeItem.foodName,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 24.0,
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 1.2,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Rs ${storeItem.price}',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18.0,
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 1.2,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 10.0,
+                                    right: 10.0,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context).primaryColor,
+                                        borderRadius: BorderRadius.circular(30.0),
+                                      ),
+                                      child: IconButton(
+                                        icon: Icon(Icons.add),
+                                        iconSize: 30.0,
+                                        color: Colors.white,
+                                        onPressed: () {},
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+
+                        }),
+
+
+
+
+                    );*/
+
+                    return GridView.count(
+                      padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                      crossAxisCount: 2,
+                      children: List.generate(storeItems.length, (index) {
+                        final storeItem= storeItems[index];
+                        return Center(
+                          child: Container(
+                            margin: EdgeInsets.all(5.0),
                             child: Stack(
                               alignment: Alignment.center,
                               children: <Widget>[
                                 Container(
+                                  //margin: EdgeInsets.all(10.0),
                                   height: 175.0,
                                   width: 175.0,
                                   decoration: BoxDecoration(
@@ -272,6 +402,7 @@ class _StoreItemListPageState extends State<StoreItemListPage> {
                                   ),
                                 ),
                                 Container(
+                                  //margin: EdgeInsets.all(10.0),
                                   height: 175.0,
                                   width: 175.0,
                                   decoration: BoxDecoration(
@@ -332,14 +463,16 @@ class _StoreItemListPageState extends State<StoreItemListPage> {
                                 ),
                               ],
                             ),
-                          );
+                          ),
+                        );
 
-                        }),
+                      }),
 
 
 
 
                     );
+
                   },
                 ),
               ),
