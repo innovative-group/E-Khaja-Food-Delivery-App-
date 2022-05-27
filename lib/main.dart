@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           ),
 
         //home: LoginScreen(),
-        home: LoginScreen(),
+        home: StoreListPage(),
 
     ),
 

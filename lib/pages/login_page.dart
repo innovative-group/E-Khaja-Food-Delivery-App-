@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_sub_collection/pages/my_account.dart';
 import 'package:firebase_sub_collection/pages/registration_page.dart';
 import 'package:firebase_sub_collection/pages/store_list_page.dart';
 import 'package:flutter/material.dart';
@@ -176,9 +177,11 @@ class _LoginScreenState extends State<LoginScreen> {
         await _auth
             .signInWithEmailAndPassword(email: email, password: password)
             .then((uid) => {
+
+              //print("\n\n\n----------->> The uid value= $uid" + "\n\n"),
           Fluttertoast.showToast(msg: "Login Successful"),
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => StoreListPage())),
+              MaterialPageRoute(builder: (context) => MyAccount())),
         });
       } on FirebaseAuthException catch (error) {
         switch (error.code) {

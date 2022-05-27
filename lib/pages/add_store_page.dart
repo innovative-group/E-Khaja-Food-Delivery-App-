@@ -23,10 +23,10 @@ class _AddStorePageState extends State<AddStorePage> {
 
   AddStoreViewModel _addStoreVM;
 
-  void _saveStore(String imagePath) async{
+  void _saveStore(String imagePath, String loggedUser_uid) async{
     if(_formKey.currentState.validate())
       {
-        final isSaved= await _addStoreVM.saveStore(imagePath);
+        final isSaved= await _addStoreVM.saveStore(imagePath, loggedUser_uid);
         if(isSaved)
         {
            Navigator.pop(context);
@@ -68,7 +68,7 @@ class _AddStorePageState extends State<AddStorePage> {
     downloadURL= await ref.getDownloadURL();
     print(downloadURL);
 
-    _saveStore(downloadURL);
+    _saveStore(downloadURL, widget.userId);
 
   }
 

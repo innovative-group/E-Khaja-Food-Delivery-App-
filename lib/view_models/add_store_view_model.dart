@@ -8,10 +8,11 @@ class AddStoreViewModel extends ChangeNotifier{
   String  resturantName= "";
   String  location= "";
   String  offer= "";
-  int rating;
-  String message= "";
-  String email= "";
-  int contact;
+  int     rating;
+  String  message= "";
+  String  email= "";
+  int     contact;
+  String  uid;
 
   /*void saveStore(){
     final store= Store(storeName, storeAddress);
@@ -23,16 +24,20 @@ class AddStoreViewModel extends ChangeNotifier{
     FirebaseFirestore.instance.collection("stores").add(store.toMap());
   }*/
 
-  Future<bool> saveStore(String imagePath)async{
+  Future<bool> saveStore(String imagePath, String loggedUser_uid)async{
 
     bool isSaved= false;
 
+    print("\n\n\n------------------->> "+ loggedUser_uid + "\n\n\n");
 
     //final store= Store(imagePath, resturantName, location, offer, rating);
     final store= Store(imagePath, resturantName, location, offer, rating,  email, contact);
 
     try{
-      await FirebaseFirestore.instance.collection("stores").add(store.toMap());
+     //await FirebaseFirestore.instance.collection("stores").add(store.toMap());
+
+      await FirebaseFirestore.instance.collection("stores").doc(loggedUser_uid).set(store.toMap());
+
       isSaved= true;
       message= "Store has been Saved";
 

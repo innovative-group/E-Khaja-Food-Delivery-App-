@@ -38,7 +38,7 @@ class _StoreListPage extends State<StoreListPage> {
             return _buildList(snapshot.data);
           }
           else {
-            return EmptyResultsWidget(message: Constants.NO_STORES_FOUND);
+            return Center(child: CircularProgressIndicator());
           }
         }
     );
@@ -73,8 +73,6 @@ class _StoreListPage extends State<StoreListPage> {
       }),
 
 
-
-
     );
 
 
@@ -90,18 +88,6 @@ class _StoreListPage extends State<StoreListPage> {
     // TODO: implement initState
     super.initState();
 
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(user.uid)
-        .get()
-        .then((value) {
-
-      setState(() {
-      });
-      this.loggedInUser = Account.fromMap(value.data());
-      setState(() {
-      });
-    });
   }
 
 
@@ -627,7 +613,7 @@ class _StoreListPage extends State<StoreListPage> {
             onTap: () {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (ctx) => MyAccount(),
+                  builder: (ctx) => LoginScreen(),
                 ),
               );
             },
@@ -636,7 +622,7 @@ class _StoreListPage extends State<StoreListPage> {
               color: Theme.of(context).primaryColor,
               size: 30,
             ),
-            title: Text("My Account"),
+            title: Text("Register Shop"),
           ),
 
           ListTile(
@@ -733,21 +719,58 @@ class _StoreListPage extends State<StoreListPage> {
                       _buildBottomPart(context),
 
                       SizedBox(height: 5.0),
-                      Text(
-                        'Nearby Restaurants',
-                        style: TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1.2,
+                     /* Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black12,
+                            style: BorderStyle.solid,
+                            width: 1.0,
+                          ),
+                          color: Colors.black12,
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+
+                        //color: Colors.black12,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 2.0, bottom: 2.0),
+                          child: Text(
+                            'Nearby Restaurants',
+                            style: TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1.2,
+                            ),
+                          ),
+                        ),
+                      ),*/
+
+
+                      Container(
+
+
+                        //color: Colors.black12,
+                        child: Text(
+                          'Nearby Restaurants',
+                          style: TextStyle(
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.2,
+                          ),
                         ),
                       ),
+
                       SizedBox(height: 10.0),
                       Expanded(
                         flex: 7,
                         child: Container(
 
-                            //color: Colors.red,
-                            child: _buildBody()
+                                  //color: Colors.red,
+                                    child: _buildBody()
+                                ),
+                              ),
+
+                            ],
+                          ),
                         ),
                       ),
 
@@ -757,10 +780,8 @@ class _StoreListPage extends State<StoreListPage> {
               )
 
 
-            ],
-          ),
-        ),
-      ),
+
+
 
     );
   }
