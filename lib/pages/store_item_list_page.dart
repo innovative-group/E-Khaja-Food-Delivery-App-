@@ -13,12 +13,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 class StoreItemListPage extends StatefulWidget {
 
+  int flag;
   String storeId;
   final StoreViewModel store;
   StoreItemListViewModel _storeItemListVM;
 
 
-  StoreItemListPage(this.store, this.storeId){
+  StoreItemListPage(this.store, this.storeId, this.flag){
     _storeItemListVM= StoreItemListViewModel(store: store);
   }
 
@@ -76,7 +77,14 @@ class _StoreItemListPageState extends State<StoreItemListPage> {
 
     return Scaffold(
         appBar: AppBar(
-            title: Center(child: Text(widget.store.resturantName)),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(flex: 2, child: Container()),
+                Text(widget.store.resturantName,),
+                Expanded(flex: 6, child: Container()),
+
+              ],),
            /* leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
@@ -86,21 +94,24 @@ class _StoreItemListPageState extends State<StoreItemListPage> {
 
             ),*/
 
-            actions: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  child: Icon(Icons.add),
-                  onTap: () {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder:(context) => StoreItemsWidget(widget.store, widget.storeId),
-                    ));
-                  },
-                ),
+          actions: widget.flag == 1 ? [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                child: Icon(Icons.add),
+                onTap: () {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder:(context) => StoreItemsWidget(widget.store, widget.storeId),
+                  ));
+                },
               ),
+            ),
 
 
-          ],
+          ] : [
+            Container(),
+          ] ,
+
         ),
         body: Column(
             children: <Widget>[

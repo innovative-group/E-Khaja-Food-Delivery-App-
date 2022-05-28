@@ -21,6 +21,10 @@ import 'package:provider/provider.dart';
 import 'my_account.dart';
 
 class StoreListPage extends StatefulWidget {
+
+  int flag;
+  StoreListPage({Key key, this.flag}): super(key: key);
+
   @override
   _StoreListPage createState() => _StoreListPage();
 }
@@ -96,7 +100,7 @@ class _StoreListPage extends State<StoreListPage> {
 
   void _navigateToStoreItems(BuildContext context, StoreViewModel store)
   {
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> StoreItemListPage(store, store.storeId )));
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> StoreItemListPage(store, store.storeId, widget.flag)));
   }
 
 

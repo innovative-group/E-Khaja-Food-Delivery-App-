@@ -209,6 +209,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               child: Form(
                 key: _formKey,
                 child: Column(
+
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
@@ -218,7 +219,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           "assets/logo.png",
                           fit: BoxFit.contain,
                         )),*/
-                    SizedBox(height: 45),
+
+                    CircleAvatar(
+                      radius: 56.0,
+                      child: ClipRRect(
+                        child:Image.asset(
+                          "images/logos.png",
+                          fit: BoxFit.contain,
+                          height: 100.0,
+                          width: 100.0,
+                        ),
+
+                        borderRadius: BorderRadius.circular(55.0),
+                        ),
+                    ),
+
+                    SizedBox(height: 30.0),
                     firstNameField,
                     SizedBox(height: 20),
                     secondNameField,

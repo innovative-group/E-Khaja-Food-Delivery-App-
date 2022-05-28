@@ -122,9 +122,25 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Form(
                 key: _formKey,
                 child: Column(
+
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
+
+                    CircleAvatar(
+                      radius: 56.0,
+                      child: ClipRRect(
+                        child:Image.asset(
+                          "images/logos.png",
+                          fit: BoxFit.contain,
+                          height: 100.0,
+                          width: 100.0,
+                        ),
+
+                        borderRadius: BorderRadius.circular(55.0),
+                      ),
+                    ),
+
                     /* SizedBox(
                         height: 200,
                         child: Image.asset(

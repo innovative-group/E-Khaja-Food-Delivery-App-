@@ -6,6 +6,7 @@ import 'package:firebase_sub_collection/view_models/store_item_list_view_model.d
 import 'package:firebase_sub_collection/view_models/store_item_view_model.dart';
 import 'package:firebase_sub_collection/view_models/store_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 class StoreItemsWidget extends StatefulWidget {
@@ -73,6 +74,7 @@ class _StoreItemsWidgetState extends State<StoreItemsWidget> {
 
       widget._storeItemListVM.saveStoreItem();
       _clearTextBoxes();
+
     }
   }
 
@@ -84,29 +86,39 @@ class _StoreItemsWidgetState extends State<StoreItemsWidget> {
     _offerController.clear();
     _priceController.clear();
     _ratingController.clear();
+
+
   }
 
   File _image;
-
   final imagePicker= ImagePicker();
 
   Future imagePickerMethod() async
   {
-    final pick= await imagePicker.pickImage(source: ImageSource.gallery);
+    try{
+      final image= await imagePicker.pickImage(source: ImageSource.gallery );
 
-    setState(() {
-      if(pick != null)
-      {
-        _image= File(pick.path);
+      setState(() {
+        if(image != null)
+        {
 
-      }
-      else
-      {
-        // showing a snackbar with error message to UI part
-        showSnackBar("No Image selected", Duration(milliseconds: 1200));
-      }
-    });
+          final imageTemporary= File(image.path);
+          setState((){
+            this._image= imageTemporary;
+
+          });
+        }
+        else
+        {
+          // showing a snackbar with error message to UI part
+          showSnackBar("No Image selected", Duration(milliseconds: 1200));
+        }
+      });
+    } on PlatformException catch (e){
+      print('Failed to pick image: $e');
+    }
   }
+
 
   Future uploadImage() async {
     final postID= DateTime.now().millisecondsSinceEpoch.toString();
@@ -118,6 +130,8 @@ class _StoreItemsWidgetState extends State<StoreItemsWidget> {
     downloadURL= path;
 
     _saveStoreItem();
+
+
 
   }
 
@@ -131,94 +145,114 @@ class _StoreItemsWidgetState extends State<StoreItemsWidget> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+
         appBar: AppBar(
-          title: Text("Menus"),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(flex: 2, child: Container()),
+              Text("Item details",),
+              Expanded(flex: 6, child: Container()),
+
+            ],),
         ),
         body:  Padding(
           padding: const EdgeInsets.all(8.0),
             child: Form(
               key: _formKey,
-              child: Column(children: [
+              child: SingleChildScrollView(
+                child: Column(
+                    children: [
+
+                        SizedBox(height: 20.0,),
+                        GestureDetector(
+                          onTap: () {
+                            imagePickerMethod();
+                          },
+                          child: CircleAvatar(
+                            radius: 60.0,
+                            child: ClipRRect(
+                              child: _image != null ? Image.file(
+                                  _image,
+                                width: 110.0,
+                                height: 110.0,
+                                fit: BoxFit.cover,
+
+                              ) : Text("Pick Image"),
+                              borderRadius: BorderRadius.circular(55.0),
+                            ),
+                          ),
+                        ),
+
+                        TextFormField(
+                          controller: _foodNameController,
+                          validator: _validate,
+                          decoration: InputDecoration(
+                            hintText: "Enter food name"
+                          ),
+                        ),
 
 
-              GestureDetector(
-                onTap: () {
-                  imagePickerMethod();
-                },
-                child: CircleAvatar(
-                  radius: 56.0,
-                  child: ClipRRect(
-                    child: Text("Pick Image"),
-                    borderRadius: BorderRadius.circular(40.0),
-                  ),
+
+                  /*TextFormField(
+                              controller: _foodImageController,
+                              validator: _validate,
+                              decoration: InputDecoration(
+                                  hintText: "Enter food image"
+                              ),
+                            ),*/
+
+
+                  // -------------->> for showing location in 3d map
+                  // or to simply calculate the distance of customer to delivery food source
+
+                  /*TextFormField(
+                              controller: _locationController,
+                              validator: _validate,
+                              decoration: InputDecoration(
+                                  hintText: "Enter resturant location"
+                              ),
+                            ),*/
+
+
+                        TextFormField(
+                          controller: _priceController,
+                          validator: _validate,
+                          decoration: InputDecoration(
+                            hintText: "Enter price"
+                          ),
+                        ),
+
+                        TextFormField(
+                          controller: _offerController,
+                          validator: _validate,
+                          decoration: InputDecoration(
+                            hintText: "Enter food offer"
+                          ),
+                        ),
+
+                        TextFormField(
+                          controller: _ratingController,
+                          validator: _validate,
+                          decoration: InputDecoration(
+                              hintText: "Enter rating"
+                          ),
+                        ),
+
+                        SizedBox(height: 20.0,),
+                        RaisedButton(
+                          child: Text("Save", style: TextStyle(color: Colors.white)),
+                          onPressed: () {
+                              uploadImage();
+                              print("\n\n\n ----------->> readched to end <<--------\n\n\n");
+                            },
+                            color: Colors.blue,
+
+                        ),
+
+                    ]
                 ),
               ),
-
-              TextFormField(
-                controller: _foodNameController,
-                validator: _validate,
-                decoration: InputDecoration(
-                  hintText: "Enter food name"
-                ),
-              ),
-
-
-
-          /*TextFormField(
-                    controller: _foodImageController,
-                    validator: _validate,
-                    decoration: InputDecoration(
-                        hintText: "Enter food image"
-                    ),
-                  ),*/
-
-
-          // -------------->> for showing location in 3d map
-          // or to simply calculate the distance of customer to delivery food source
-
-          /*TextFormField(
-                    controller: _locationController,
-                    validator: _validate,
-                    decoration: InputDecoration(
-                        hintText: "Enter resturant location"
-                    ),
-                  ),*/
-
-
-              TextFormField(
-                controller: _priceController,
-                validator: _validate,
-                decoration: InputDecoration(
-                  hintText: "Enter price"
-                ),
-              ),
-
-              TextFormField(
-                controller: _offerController,
-                validator: _validate,
-                decoration: InputDecoration(
-                  hintText: "Enter food offer"
-                ),
-              ),
-
-              TextFormField(
-                controller: _ratingController,
-                validator: _validate,
-                decoration: InputDecoration(
-                    hintText: "Enter rating"
-                ),
-              ),
-
-              RaisedButton(
-                child: Text("Save", style: TextStyle(color: Colors.white)),
-                color: Colors.blue,
-                onPressed: () {
-                  uploadImage();
-                  //Navigator.pop(context);
-                },
-              ),
-
-              ]),
             ),
         ),
       ),

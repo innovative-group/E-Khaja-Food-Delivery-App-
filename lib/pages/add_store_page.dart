@@ -44,12 +44,17 @@ class _AddStorePageState extends State<AddStorePage> {
 
   Future imagePickerMethod() async
   {
-    final pick= await imagePicker.pickImage(source: ImageSource.gallery);
+    final image= await imagePicker.pickImage(source: ImageSource.gallery );
 
     setState(() {
-      if(pick != null)
+      if(image != null)
       {
-        _image= File(pick.path);
+
+        final imageTemporary= File(image.path);
+        setState((){
+          this._image= imageTemporary;
+
+        });
       }
       else
       {
@@ -57,6 +62,7 @@ class _AddStorePageState extends State<AddStorePage> {
         showSnackBar("No Image selected", Duration(milliseconds: 1200));
       }
     });
+
   }
 
   Future uploadImage() async {
@@ -85,93 +91,113 @@ class _AddStorePageState extends State<AddStorePage> {
     _addStoreVM= Provider.of<AddStoreViewModel>(context);
 
     return Scaffold(
-        appBar: AppBar(title: Text("Add Store")),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
 
-                GestureDetector(
-                  onTap: () {
-                    imagePickerMethod();
-                  },
-                  child: CircleAvatar(
-                    radius: 56.0,
-                    child: ClipRRect(
-                      child: Text("Pick Image"),
-                      borderRadius: BorderRadius.circular(40.0),
+        appBar: AppBar(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(flex: 2, child: Container()),
+                Text("Add Your Store",),
+                Expanded(flex: 6, child: Container()),
+
+              ],),
+        ),
+        body: Padding(
+          padding: EdgeInsets.all(20.0),
+          child: SingleChildScrollView(
+
+            child: Form(
+              key: _formKey,
+              child: Column(
+
+                children: <Widget> [
+
+
+                  GestureDetector(
+                    onTap: () {
+                      imagePickerMethod();
+                    },
+                    child: CircleAvatar(
+                      radius: 56.0,
+                      child: ClipRRect(
+                        child: _image != null ? Image.file(
+                          _image,
+                          width: 110.0,
+                          height: 110.0,
+                          fit: BoxFit.cover,
+
+                        ) : Text("Pick Image"),
+                        borderRadius: BorderRadius.circular(55.0),
+                      ),
                     ),
                   ),
-                ),
 
-                TextFormField(
-                  onChanged: (value) => _addStoreVM.resturantName= value,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Please enter resturant name";
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(hintText: "Enter resturant name"),
-                ),
-                TextFormField(
-                  onChanged: (value) => _addStoreVM.location= value,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Please enter resturant location";
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(hintText: "Enter store address"),
-                ),
-
-               /* TextFormField(
-                  onChanged: (value) => _addStoreVM.image= "https://www.pngall.com/wp-content/uploads/2016/05/Salad-PNG-Image.png",
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Please enter resturant image";
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(hintText: "Enter resturant image"),
-                ),*/
-
-                TextFormField(
-                  onChanged: (value) => _addStoreVM.rating= int.parse(value),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Please enter resturant rating";
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(hintText: "Enter resturant rating"),
-                ),
-
-                TextFormField(
-                  onChanged: (value) => _addStoreVM.offer= value,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Please enter resturant offer";
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(hintText: "Enter resturant offer"),
-                ),
-
-
-                RaisedButton(
-                    child: Text("Save", style: TextStyle(color: Colors.white)),
-                    onPressed: () {
-                      uploadImage();
+                  SizedBox(height: 5.0),
+                  TextFormField(
+                    onChanged: (value) => _addStoreVM.resturantName= value,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return "Please enter resturant name";
+                        return "Please enter resturant name";
+                      }
+                      return null;
                     },
-                    color: Colors.blue),
-                    Spacer(),
-                    Text(_addStoreVM.message)
-              ],
+                    decoration: InputDecoration(hintText: "Enter resturant name"),
+                  ),
+
+                  SizedBox(height: 5.0),
+                  TextFormField(
+                    onChanged: (value) => _addStoreVM.location= value,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return "Please enter resturant location";
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(hintText: "Enter store address"),
+                  ),
+
+                  SizedBox(height: 5.0),
+                  TextFormField(
+                    onChanged: (value) => _addStoreVM.rating= int.parse(value),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return "Please enter resturant rating";
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(hintText: "Enter resturant rating"),
+                  ),
+
+                  SizedBox(height: 5.0),
+                  TextFormField(
+                    onChanged: (value) => _addStoreVM.offer= value,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return "Please enter resturant offer";
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(hintText: "Enter resturant offer"),
+                  ),
+
+
+                  SizedBox(height: 10.0),
+                  RaisedButton(
+                      child: Text("Save", style: TextStyle(color: Colors.white)),
+                      onPressed: () {
+                        uploadImage();
+                      },
+                      color: Colors.blue
+                  ),
+
+
+
+                ],
+              ),
             ),
           ),
-        ));
+        ),
+    );
   }
 }

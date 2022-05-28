@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 class MyAccount extends StatefulWidget {
   MyAccount({Key key}) : super(key: key);
 
+  int flag= 1;
   @override
   State<MyAccount> createState() => _MyAccountState();
 }
@@ -121,21 +122,28 @@ class _MyAccountState extends State<MyAccount> {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   child: Text(
-                    'close',
+                    'logout',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20.0,
                     ),
                   ),
                   onPressed: () {
+                    setState((){
+                      widget.flag= 0;
+                    });
+
+                    print("\n\n\n -----logout----->> "+widget.flag.toString());
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context)=> StoreListPage(),
+                      builder: (context)=> StoreListPage(flag: widget.flag),
                     ));
                   },
 
                 ),
               ],
             ),
+
+            SizedBox(height: 10.0,),
 
             Expanded(
               child: Container(
@@ -164,6 +172,7 @@ class _MyAccountState extends State<MyAccount> {
 
   }
 
+
   Widget _buildList(QuerySnapshot snapshot){
     final stores= snapshot.docs.map((doc)=> StoreViewModel.fromSnapshot(doc)).toList();
     /*return ListView.builder(
@@ -186,15 +195,35 @@ class _MyAccountState extends State<MyAccount> {
         final storeItem= stores[index];
         final store= stores[index];
 
-        return _buildListItem(store, (store){
-          _navigateToStoreItems(context, store);
-        });
+
+        if(loggedInUser.uid == store.store.loggedInUser_uid) {
+          print("\n\n\n -------------| equal value | ---->> "+loggedInUser.uid);
+          return _buildListItem(store, (store){
+            _navigateToStoreItems(context, store);
+          });
+
+        }
+
+        return Container(
+          height: 10,
+          width: 10.0,
+          color: Colors.green,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget> [
+              Center(child: Text("Scroll down")),
+              Center(child: Text("to find your store")),
+              SizedBox(height: 50.0,),
+
+              Container(
+                child: Text("App is under construction."),
+              ),
+
+            ],
+          ),
+        );
 
       }),
-
-
-
-
     );
 
 
@@ -203,7 +232,7 @@ class _MyAccountState extends State<MyAccount> {
 
   void _navigateToStoreItems(BuildContext context, StoreViewModel store)
   {
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> StoreItemListPage(store, store.storeId )));
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> StoreItemListPage(store, store.storeId, widget.flag)));
   }
 
 
@@ -218,7 +247,7 @@ class _MyAccountState extends State<MyAccount> {
       onTap: () => onStoreSelected(store),
     );*/
 
-    return GestureDetector(
+    return  GestureDetector(
       child: Container(
 
 

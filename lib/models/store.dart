@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Store{
 
+  String loggedInUser_uid;
   final String imagePath;
   final String resturantName;
   final String location;
@@ -10,11 +11,11 @@ class Store{
   final int rating;
   final String email;
   final int contact;
-  String user_uid;
+
 
   DocumentReference reference;
 
-  Store(this.imagePath, this.resturantName, this.location, this.offer, this.rating,   this.email, this.contact, [this.reference]);
+  Store(this.loggedInUser_uid, this.imagePath, this.resturantName, this.location, this.offer, this.rating,   this.email, this.contact, [this.reference]);
   //Store(this.imagePath, this.resturantName, this.location, this.offer, this.rating, [this.reference]);
 
   String get storeId{
@@ -23,6 +24,7 @@ class Store{
 
   Map<String, dynamic> toMap(){
     return {
+      "uid":     loggedInUser_uid,
       "imagePath": imagePath,
       "resturantName":  resturantName,
       "location": location,
@@ -30,7 +32,7 @@ class Store{
       "rating":   rating,
       //"contact": contact,
       "email":   email,
-      "uid":     user_uid,
+
 
     };
   }
@@ -38,7 +40,7 @@ class Store{
   //----------------------------->> Singleton Factory Function <<-----------------
   factory Store.fromSnapshot(doc){
     //return Store(doc.data()["imagePath"], doc().data()["resturantName"],doc().data()["location"], doc().data()["offer"], doc().data()["rating"], doc.reference);
-   return Store(doc.data()["imagePath"], doc.data()["resturantName"],doc.data()["location"], doc.data()["offer"], doc.data()["rating"], doc.data()["email"], doc.data()["contact"], doc.reference);
+   return Store(doc.data()["uid"], doc.data()["imagePath"], doc.data()["resturantName"],doc.data()["location"], doc.data()["offer"], doc.data()["rating"], doc.data()["email"], doc.data()["contact"], doc.reference);
 
   }
 }
