@@ -214,72 +214,75 @@ class _StoreItemListPageState extends State<StoreItemListPage> {
               ),
 
 
-              SizedBox(height: 10.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  FlatButton(
-                    padding: EdgeInsets.symmetric(horizontal: 30.0),
-                    color: Theme.of(context).primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Text(
-                      'Reviews',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
+              SizedBox(height: 5.0),
+              Padding(
+                padding: EdgeInsets.only(left: 16, right: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    FlatButton(
+                      padding: EdgeInsets.symmetric(horizontal: 30.0),
+                      color: Theme.of(context).primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                    ),
-                    onPressed: () {
-                     /* final toEmail= 'righthuman082@gmail.com';
-                      final subject='Just an email';
-                      final message= 'Hello! I am fine.';
-
-                      final url= 'mailto:$toEmail?subject=${subject}&body=${message}';
-                      if(await canLaunch(url))
-                        {
-                          await launch(url);
-                        }*/
-
-                     launch('sms:+977 ${widget.store.contact}');
-
-
-                        //launch('mailto:righthuman082@gmail.com?subject=This is a subject');
-
-                       /*
-                       //---------->> using email launcher package <<------
-                       Email email = Email(
-
-                            to: ['righthuman082@gmail.com'],
-                            cc: ['foo@gmail.com'],
-                            bcc: ['bar@gmail.com'],
-                            subject: 'subject',
-                            body: 'body'
-                        );
-                        await EmailLauncher.launch(email);*/
-                    },
-                  ),
-
-
-                  FlatButton(
-                    padding: EdgeInsets.symmetric(horizontal: 30.0),
-                    color: Theme.of(context).primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Text(
-                      'Contact',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
+                      child: Text(
+                        'Reviews',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                        ),
                       ),
+                      onPressed: () {
+                       /* final toEmail= 'righthuman082@gmail.com';
+                        final subject='Just an email';
+                        final message= 'Hello! I am fine.';
+
+                        final url= 'mailto:$toEmail?subject=${subject}&body=${message}';
+                        if(await canLaunch(url))
+                          {
+                            await launch(url);
+                          }*/
+
+                       launch('sms:+977 ${widget.store.contact}');
+
+
+                          //launch('mailto:righthuman082@gmail.com?subject=This is a subject');
+
+                         /*
+                         //---------->> using email launcher package <<------
+                         Email email = Email(
+
+                              to: ['righthuman082@gmail.com'],
+                              cc: ['foo@gmail.com'],
+                              bcc: ['bar@gmail.com'],
+                              subject: 'subject',
+                              body: 'body'
+                          );
+                          await EmailLauncher.launch(email);*/
+                      },
                     ),
-                    onPressed: () {
-                      launch('tel:+977 ${widget.store.contact}');
-                    },
-                  ),
-                ],
+
+
+                    FlatButton(
+                      padding: EdgeInsets.symmetric(horizontal: 30.0),
+                      color: Theme.of(context).primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Text(
+                        'Contact',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                        ),
+                      ),
+                      onPressed: () {
+                        launch('tel:+977 ${widget.store.contact}');
+                      },
+                    ),
+                  ],
+                ),
               ),
               //SizedBox(height: 10.0),
 
@@ -439,7 +442,7 @@ class _StoreItemListPageState extends State<StoreItemListPage> {
                                         storeItem.foodName,
                                         style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 24.0,
+                                          fontSize: 20.0,
                                           fontWeight: FontWeight.bold,
                                           letterSpacing: 1.2,
                                         ),

@@ -58,115 +58,113 @@ class _MyAccountState extends State<MyAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: Column(
-          children: <Widget> [
-            UserAccountsDrawerHeader(
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage("images/profilePic.PNG"),
-              ),
-              accountName: Text(loggedInUser.firstName !=null ? loggedInUser.firstName + " " + loggedInUser.secondName :   " "),
-              accountEmail: Text(loggedInUser.email !=null ? loggedInUser.email : " "),
+      body: Column(
+        children: <Widget> [
+          UserAccountsDrawerHeader(
+            currentAccountPicture: CircleAvatar(
+              backgroundImage: AssetImage("images/profilePic.PNG"),
             ),
+            accountName: Text(loggedInUser.firstName !=null ? loggedInUser.firstName + " " + loggedInUser.secondName :   " "),
+            accountEmail: Text(loggedInUser.email !=null ? loggedInUser.email : " "),
+          ),
 
-            SizedBox(height: 20),
-            Text(
-              'WelCome To DashBoard',
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.2,
-              ),
+          SizedBox(height: 20),
+          Text(
+            'WelCome To DashBoard',
+            style: TextStyle(
+              fontSize: 24.0,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.2,
             ),
+          ),
 
-            Text(
-              loggedInUser.firstName != null ? loggedInUser.firstName : " ",
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.2,
-              ),
+          Text(
+            loggedInUser.firstName != null ? loggedInUser.firstName : " ",
+            style: TextStyle(
+              fontSize: 24.0,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.2,
             ),
+          ),
 
-            SizedBox(height: 30.0),
+          SizedBox(height: 30.0),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                FlatButton(
-                  padding: EdgeInsets.symmetric(horizontal: 30.0),
-                  color: Theme.of(context).primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Text(
-                    'Add Resturant',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                  onPressed: () {
-                    _navigateToAddStorePage(context, loggedInUser.uid);
-                    print("\n\n\n ------------_navigateToAddStorePage--------->> "+ loggedInUser.uid + "\n\n\n");
-                  },
-
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              FlatButton(
+                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                color: Theme.of(context).primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
-
-
-
-                FlatButton(
-                  padding: EdgeInsets.symmetric(horizontal: 30.0),
-                  color: Theme.of(context).primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+                child: Text(
+                  'Add Resturant',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
                   ),
-                  child: Text(
-                    'logout',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                  onPressed: () {
-                    setState((){
-                      widget.flag= 0;
-                    });
-
-                    print("\n\n\n -----logout----->> "+widget.flag.toString());
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context)=> StoreListPage(flag: widget.flag),
-                    ));
-                  },
-
                 ),
-              ],
-            ),
+                onPressed: () {
+                  _navigateToAddStorePage(context, loggedInUser.uid);
+                  print("\n\n\n ------------_navigateToAddStorePage--------->> "+ loggedInUser.uid + "\n\n\n");
+                },
 
-            SizedBox(height: 10.0,),
+              ),
 
-            Expanded(
-              child: Container(
-                color: Colors.grey,
 
-                child: StreamBuilder<QuerySnapshot>(
-                    stream: _storeListVM.storeAsStream,
-                    builder: (context, snapshot){
-                      if(snapshot.hasData && snapshot.data.docs.isNotEmpty){
-                        return _buildList(snapshot.data);
-                      }
-                      else {
-                        return Center(child: CircularProgressIndicator());
-                      }
+
+              FlatButton(
+                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                color: Theme.of(context).primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Text(
+                  'logout',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                  ),
+                ),
+                onPressed: () {
+                  setState((){
+                    widget.flag= 0;
+                  });
+
+                  print("\n\n\n -----logout----->> "+widget.flag.toString());
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context)=> StoreListPage(flag: widget.flag),
+                  ));
+                },
+
+              ),
+            ],
+          ),
+
+          SizedBox(height: 10.0,),
+
+          Expanded(
+            child: Container(
+              color: Colors.grey,
+
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: _storeListVM.storeAsStream,
+                  builder: (context, snapshot){
+                    if(snapshot.hasData && snapshot.data.docs.isNotEmpty){
+                      return _buildList(snapshot.data);
                     }
-                ),
-
+                    else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  }
               ),
+
             ),
+          ),
 
 
-          ],
-        ),
+        ],
       ),
     );
 

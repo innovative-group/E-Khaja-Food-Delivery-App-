@@ -200,55 +200,53 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           },
         ),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Container(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(36.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
+      body: SingleChildScrollView(
+        child: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 36.0, right: 36.0, bottom: 36.0, top: 0.0,),
+            child: Form(
+              key: _formKey,
+              child: Column(
 
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    /* SizedBox(
-                        height: 180,
-                        child: Image.asset(
-                          "assets/logo.png",
-                          fit: BoxFit.contain,
-                        )),*/
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  /* SizedBox(
+                      height: 180,
+                      child: Image.asset(
+                        "assets/logo.png",
+                        fit: BoxFit.contain,
+                      )),*/
 
-                    CircleAvatar(
-                      radius: 56.0,
-                      child: ClipRRect(
-                        child:Image.asset(
-                          "images/logos.png",
-                          fit: BoxFit.contain,
-                          height: 100.0,
-                          width: 100.0,
-                        ),
+                  CircleAvatar(
+                    radius: 56.0,
+                    child: ClipRRect(
+                      child:Image.asset(
+                        "images/logo.png",
+                        fit: BoxFit.contain,
+                        height: 100.0,
+                        width: 100.0,
+                      ),
 
-                        borderRadius: BorderRadius.circular(55.0),
-                        ),
-                    ),
+                      borderRadius: BorderRadius.circular(55.0),
+                      ),
+                  ),
 
-                    SizedBox(height: 30.0),
-                    firstNameField,
-                    SizedBox(height: 20),
-                    secondNameField,
-                    SizedBox(height: 20),
-                    emailField,
-                    SizedBox(height: 20),
-                    passwordField,
-                    SizedBox(height: 20),
-                    confirmPasswordField,
-                    SizedBox(height: 20),
-                    signUpButton,
-                    SizedBox(height: 15),
-                  ],
-                ),
+                  SizedBox(height: 30.0),
+                  firstNameField,
+                  SizedBox(height: 20),
+                  secondNameField,
+                  SizedBox(height: 20),
+                  emailField,
+                  SizedBox(height: 20),
+                  passwordField,
+                  SizedBox(height: 20),
+                  confirmPasswordField,
+                  SizedBox(height: 20),
+                  signUpButton,
+                  SizedBox(height: 15),
+                ],
               ),
             ),
           ),

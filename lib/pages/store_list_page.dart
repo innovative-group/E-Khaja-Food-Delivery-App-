@@ -615,11 +615,15 @@ class _StoreListPage extends State<StoreListPage> {
 
           ListTile(
             onTap: () {
-              Navigator.of(context).pushReplacement(
+              /*Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (ctx) => LoginScreen(),
                 ),
-              );
+              );*/
+              Navigator.push(context, MaterialPageRoute(
+                builder: (ctx) => LoginScreen(),
+              ));
+
             },
             leading: Icon(
               Icons.person,
@@ -653,7 +657,7 @@ class _StoreListPage extends State<StoreListPage> {
             title: Text("My Order"),
           ),
 
-          GestureDetector(
+          /*GestureDetector(
             onTap: () {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                 builder: (context) => LoginScreen(),
@@ -667,7 +671,7 @@ class _StoreListPage extends State<StoreListPage> {
               ),
               title: Text("Logout"),
             ),
-          ),
+          ),*/
         ],
       ),
     );
