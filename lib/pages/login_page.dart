@@ -111,34 +111,19 @@ class _LoginScreenState extends State<LoginScreen> {
           )),
     );
 
-    return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.red),
-            onPressed: () {
-              // passing this to our root
-              Navigator.of(context).pop();
-            },
-          ),
-        ),
-
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: SingleChildScrollView(
           child: Container(
             color: Colors.white,
             child: Padding(
-              padding: const EdgeInsets.only(left: 36.0, right: 36.0, bottom: 36.0, top: 36.0,),
+              padding: const EdgeInsets.all(36.0),
               child: Form(
                 key: _formKey,
                 child: Column(
 
-                  //mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
 
@@ -146,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       radius: 56.0,
                       child: ClipRRect(
                         child:Image.asset(
-                          "images/logo.png",
+                          "images/logos.png",
                           fit: BoxFit.contain,
                           height: 100.0,
                           width: 100.0,
