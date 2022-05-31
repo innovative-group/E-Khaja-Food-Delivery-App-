@@ -4,7 +4,7 @@
 
 
     <application
-        android:label="firebase_sub_collection"
+        android:label="E-Khaja"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:exported="true"

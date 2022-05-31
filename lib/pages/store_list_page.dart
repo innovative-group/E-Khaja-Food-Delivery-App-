@@ -16,6 +16,8 @@ import 'package:firebase_sub_collection/view_models/store_view_model.dart';
 import 'package:firebase_sub_collection/widgets/empty_results_widget.dart';
 import 'package:firebase_sub_collection/widgets/recent_orders.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 
 import 'my_account.dart';
@@ -23,13 +25,27 @@ import 'my_account.dart';
 class StoreListPage extends StatefulWidget {
 
   int flag;
-  StoreListPage({Key key, this.flag}): super(key: key);
+  String logButton;
+  bool hasInternet= false;
+
+  StoreListPage({Key key, this.flag, this.logButton}): super(key: key){
+    print("\n\n\n------------> I am called \n\n");
+    if(logButton== "ntg")
+      hasInternet= true;
+  }
+
 
   @override
-  _StoreListPage createState() => _StoreListPage();
+  _StoreListPage createState() => _StoreListPage(logButton);
 }
 
 class _StoreListPage extends State<StoreListPage> {
+
+
+
+
+  String logButton;
+  _StoreListPage(this.logButton);
 
   StoreListViewModel _storeListVM= StoreListViewModel();
 
@@ -71,7 +87,7 @@ class _StoreListPage extends State<StoreListPage> {
         final store= stores[index];
 
         return _buildListItem(store, (store){
-          _navigateToStoreItems(context, store);
+          _navigateToStoreItems(context, store, widget.hasInternet);
         });
 
       }),
@@ -91,16 +107,33 @@ class _StoreListPage extends State<StoreListPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    InternetConnectionChecker().onStatusChange.listen((status) {
+      final hasInternet= status== InternetConnectionStatus.connected;
 
+      setState(() {
+        this.widget.hasInternet= hasInternet;
+
+
+        if(hasInternet!= true)
+          Fluttertoast.showToast(
+              msg: "No internet connection",
+              gravity: ToastGravity.CENTER,
+              backgroundColor: Colors.red,
+              //fontSize: 20.0,
+
+          );
+
+      });
+    });;
   }
 
 
 
 
 
-  void _navigateToStoreItems(BuildContext context, StoreViewModel store)
+  void _navigateToStoreItems(BuildContext context, StoreViewModel store, bool hasInternet)
   {
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> StoreItemListPage(store, store.storeId, widget.flag)));
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> StoreItemListPage(store, store.storeId, widget.flag, hasInternet)));
   }
 
 
@@ -134,7 +167,9 @@ class _StoreListPage extends State<StoreListPage> {
           children: <Widget> [
             ClipRRect(
               borderRadius: BorderRadius.circular(15.0),
-              child: Image(
+              child: widget.hasInternet != true? Padding(
+                  padding: EdgeInsets.only(top: 30.0, left: 30.0, right: 30.0, bottom: 30.0),
+                  child: CircularProgressIndicator()) : Image(
                 height: 100.0,
                 width: 152.0,
                 image: NetworkImage(store.imagePath),
@@ -360,6 +395,8 @@ class _StoreListPage extends State<StoreListPage> {
 
 
   Widget _buildSingleCategory({String image, String name}) {
+
+    //print("\n\n\n ---------------->> "+ image + "\n\n\n");
     return Container(
 
       margin: EdgeInsets.all(10.0),
@@ -379,15 +416,39 @@ class _StoreListPage extends State<StoreListPage> {
           Expanded(
             child: Row(
               children: <Widget>[
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(15.0),
-                  child: Image(
-                    height: 100.0,
-                    width: 100.0,
-                    image: NetworkImage(image),
-                    fit: BoxFit.contain,
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15.0),
+                    child: widget.hasInternet != true ? Center(
+                      child: CircularProgressIndicator(),
+                    ) : Image(
+                      height: 100.0,
+                      width: 100.0,
+                      image: NetworkImage(image),
+                      fit: BoxFit.contain,
+                    ),
+
+                   /* child: Image.network(
+                      image,
+                      loadingBuilder: (BuildContext context, Widget child,
+                          ImageChunkEvent loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes
+                                : null,
+                          ),
+                        );
+                      },
+                    ),*/
+
+
+
                   ),
                 ),
+
                 Expanded(
                   child: Container(
                     //color: Colors.yellow,
@@ -496,9 +557,9 @@ class _StoreListPage extends State<StoreListPage> {
                   maxRadius: 45,
                   backgroundColor: Colors.white,
                   child: CircleAvatar(
-                    maxRadius: 40,
+                    maxRadius: 50,
                     backgroundImage:
-                    AssetImage("images/profilePic.PNG"),
+                    AssetImage("images/logo.png"),
                   ),
                 ),
                 Expanded(
@@ -596,30 +657,31 @@ class _StoreListPage extends State<StoreListPage> {
         children: [
           UserAccountsDrawerHeader(
             currentAccountPicture: CircleAvatar(
-              backgroundImage: AssetImage("images/profilePic.PNG"),
+
+              backgroundImage: AssetImage("images/logo.png", ),
             ),
-            accountName: Text("Hari Shrestha"),
-            accountEmail: Text("harishrestha@gmail.com"),
+            accountName: Text("We believe on service"),
+            accountEmail: Text("and Customer satisfaction"),
           ),
-          TextButton(
-            onPressed:() {Navigator.of(context).pop(); },
-            child: ListTile(
-              leading: Icon(
-                Icons.home,
-                size: 30,
-                color: Theme.of(context).primaryColor,
-              ),
-              title: Text("HomePage"),
+
+
+          ListTile(
+            onTap:() {Navigator.of(context).pop(); },
+            leading: Icon(
+              Icons.home,
+              size: 30,
+              color: Theme.of(context).primaryColor,
             ),
+            title: Text("HomePage"),
           ),
 
           ListTile(
             onTap: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (ctx) => LoginScreen(),
-                ),
-              );
+
+              Navigator.push(context, MaterialPageRoute(
+                builder: (ctx) => LoginScreen(),
+              ));
+
             },
             leading: Icon(
               Icons.person,
@@ -653,7 +715,7 @@ class _StoreListPage extends State<StoreListPage> {
             title: Text("My Order"),
           ),
 
-          GestureDetector(
+          /*GestureDetector(
             onTap: () {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                 builder: (context) => LoginScreen(),
@@ -667,7 +729,7 @@ class _StoreListPage extends State<StoreListPage> {
               ),
               title: Text("Logout"),
             ),
-          ),
+          ),*/
         ],
       ),
     );
@@ -682,61 +744,82 @@ class _StoreListPage extends State<StoreListPage> {
     myProvider= Provider.of<MyProvider>(context);
     myProvider.getCategoryProduct();
 
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async{
+        print("Back Button is pressed.");
+        return false;
+      },
+      child: Scaffold(
 
-      key: _scaffoldKey,
-      drawer: _buildMyDrawer(context),
-      body: SafeArea(
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 0.0),
-          //---------------------------------------------------->> Main Background to all <<---------------
-          child: Column(
-            //mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget> [
+        key: _scaffoldKey,
+        drawer: _buildMyDrawer(context),
+        body: SafeArea(
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 0.0),
+            //---------------------------------------------------->> Main Background to all <<---------------
+            child: Column(
+              //mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget> [
 
-              //------------>> Header-section Top [profile] part <<--------------
-              _buildTopPart(context),
-              //-----------------------------------------------------------------
+                //------------>> Header-section Top [profile] part <<--------------
+                _buildTopPart(context),
+                //-----------------------------------------------------------------
 
 
-              SizedBox(height: 10.0,),
+                SizedBox(height: 10.0,),
 
-              Expanded(
-                flex: 30,
-                child: Container(
-                  //color: Colors.red,
-                  margin: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Column(
-                    //mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
+                Expanded(
+                  flex: 30,
+                  child: Container(
+                    //color: Colors.red,
+                    margin: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      //mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
 
-                      Text(
-                        'Recent Orders',
-                        style: TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                      _buildBottomPart(context),
-
-                      SizedBox(height: 5.0),
-                     /* Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.black12,
-                            style: BorderStyle.solid,
-                            width: 1.0,
+                        Text(
+                          'Recent Orders',
+                          style: TextStyle(
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.2,
                           ),
-                          color: Colors.black12,
-                          borderRadius: BorderRadius.circular(30.0),
                         ),
+                        _buildBottomPart(context),
 
-                        //color: Colors.black12,
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 2.0, bottom: 2.0),
+                        SizedBox(height: 5.0),
+                       /* Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.black12,
+                              style: BorderStyle.solid,
+                              width: 1.0,
+                            ),
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+
+                          //color: Colors.black12,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 2.0, bottom: 2.0),
+                            child: Text(
+                              'Nearby Restaurants',
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1.2,
+                              ),
+                            ),
+                          ),
+                        ),*/
+
+
+                        Container(
+
+
+                          //color: Colors.black12,
                           child: Text(
                             'Nearby Restaurants',
                             style: TextStyle(
@@ -746,47 +829,32 @@ class _StoreListPage extends State<StoreListPage> {
                             ),
                           ),
                         ),
-                      ),*/
 
+                        SizedBox(height: 10.0),
+                        Expanded(
+                          flex: 7,
+                          child: Container(
 
-                      Container(
-
-
-                        //color: Colors.black12,
-                        child: Text(
-                          'Nearby Restaurants',
-                          style: TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 1.2,
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 10.0),
-                      Expanded(
-                        flex: 7,
-                        child: Container(
-
-                                  //color: Colors.red,
-                                    child: _buildBody()
+                                    //color: Colors.red,
+                                      child: _buildBody()
+                                  ),
                                 ),
-                              ),
 
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
 
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              )
+                )
 
 
 
 
 
+      ),
     );
   }
 }

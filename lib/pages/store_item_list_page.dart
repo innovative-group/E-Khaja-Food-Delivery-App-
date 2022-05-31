@@ -15,11 +15,12 @@ class StoreItemListPage extends StatefulWidget {
 
   int flag;
   String storeId;
+  bool hasInternet;
   final StoreViewModel store;
   StoreItemListViewModel _storeItemListVM;
 
 
-  StoreItemListPage(this.store, this.storeId, this.flag){
+  StoreItemListPage(this.store, this.storeId, this.flag, [this.hasInternet]){
     _storeItemListVM= StoreItemListViewModel(store: store);
   }
 
@@ -82,7 +83,7 @@ class _StoreItemListPageState extends State<StoreItemListPage> {
               children: [
                 Expanded(flex: 2, child: Container()),
                 Text(widget.store.resturantName,),
-                Expanded(flex: 6, child: Container()),
+                Expanded(flex: 3, child: Container()),
 
               ],),
            /* leading: IconButton(
@@ -94,23 +95,7 @@ class _StoreItemListPageState extends State<StoreItemListPage> {
 
             ),*/
 
-          actions: widget.flag == 1 ? [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GestureDetector(
-                child: Icon(Icons.add),
-                onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder:(context) => StoreItemsWidget(widget.store, widget.storeId),
-                  ));
-                },
-              ),
-            ),
 
-
-          ] : [
-            Container(),
-          ] ,
 
         ),
         body: Column(
@@ -118,7 +103,7 @@ class _StoreItemListPageState extends State<StoreItemListPage> {
               Stack(
                 children: <Widget>[
                   Hero(
-                    tag: widget.store.imagePath,
+                    tag: widget.hasInternet != true ? Center(child: CircularProgressIndicator()) : widget.store.imagePath,
                     child: Image(
                       height: 160.0,
                       width: MediaQuery.of(context).size.width,
@@ -214,72 +199,86 @@ class _StoreItemListPageState extends State<StoreItemListPage> {
               ),
 
 
-              SizedBox(height: 10.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  FlatButton(
-                    padding: EdgeInsets.symmetric(horizontal: 30.0),
-                    color: Theme.of(context).primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Text(
-                      'Reviews',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
+              SizedBox(height: 5.0),
+              Padding(
+                padding: EdgeInsets.only(left: 16, right: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    FlatButton(
+                      padding: EdgeInsets.symmetric(horizontal: 30.0),
+                      color: Theme.of(context).primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                    ),
-                    onPressed: () {
-                     /* final toEmail= 'righthuman082@gmail.com';
-                      final subject='Just an email';
-                      final message= 'Hello! I am fine.';
-
-                      final url= 'mailto:$toEmail?subject=${subject}&body=${message}';
-                      if(await canLaunch(url))
-                        {
-                          await launch(url);
-                        }*/
-
-                     launch('sms:+977 ${widget.store.contact}');
-
-
-                        //launch('mailto:righthuman082@gmail.com?subject=This is a subject');
-
-                       /*
-                       //---------->> using email launcher package <<------
-                       Email email = Email(
-
-                            to: ['righthuman082@gmail.com'],
-                            cc: ['foo@gmail.com'],
-                            bcc: ['bar@gmail.com'],
-                            subject: 'subject',
-                            body: 'body'
-                        );
-                        await EmailLauncher.launch(email);*/
-                    },
-                  ),
-
-
-                  FlatButton(
-                    padding: EdgeInsets.symmetric(horizontal: 30.0),
-                    color: Theme.of(context).primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Text(
-                      'Contact',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
+                      child: Text(
+                        widget.flag== 1 ? "Add Menu" : "Review",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                        ),
                       ),
+                      onPressed: () {
+                       /* final toEmail= 'righthuman082@gmail.com';
+                        final subject='Just an email';
+                        final message= 'Hello! I am fine.';
+
+                        final url= 'mailto:$toEmail?subject=${subject}&body=${message}';
+                        if(await canLaunch(url))
+                          {
+                            await launch(url);
+                          }*/
+
+
+                        if(widget.flag== 1) {
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    StoreItemsWidget(widget.store,
+                                        widget.storeId),
+                              ));
+
+                        }else {
+                          launch('sms:+977 ${widget.store.contact}');   //----------->> SMS functionality for review mechanism
+                        }
+
+
+                          //launch('mailto:righthuman082@gmail.com?subject=This is a subject');
+
+                         /*
+                         //---------->> using email launcher package <<------
+                         Email email = Email(
+
+                              to: ['righthuman082@gmail.com'],
+                              cc: ['foo@gmail.com'],
+                              bcc: ['bar@gmail.com'],
+                              subject: 'subject',
+                              body: 'body'
+                          );
+                          await EmailLauncher.launch(email);*/
+                      },
                     ),
-                    onPressed: () {
-                      launch('tel:+977 ${widget.store.contact}');
-                    },
-                  ),
-                ],
+
+
+                    FlatButton(
+                      padding: EdgeInsets.symmetric(horizontal: 30.0),
+                      color: Theme.of(context).primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Text(
+                        'Contact',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                        ),
+                      ),
+                      onPressed: () {
+                        launch('tel:+977 ${widget.store.contact}');
+                      },
+                    ),
+                  ],
+                ),
               ),
               //SizedBox(height: 10.0),
 
@@ -439,7 +438,7 @@ class _StoreItemListPageState extends State<StoreItemListPage> {
                                         storeItem.foodName,
                                         style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 24.0,
+                                          fontSize: 20.0,
                                           fontWeight: FontWeight.bold,
                                           letterSpacing: 1.2,
                                         ),

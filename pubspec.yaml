@@ -46,6 +46,11 @@ dependencies:
   firebase_storage: ^10.0.4
   image_picker: ^0.8.4+2
 
+  internet_connection_checker: ^0.0.1+4
+
+
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -69,7 +74,7 @@ flutter:
   uses-material-design: true
   assets:
     - images/profilePic.PNG
-    - images/logos.png
+    - images/logo.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

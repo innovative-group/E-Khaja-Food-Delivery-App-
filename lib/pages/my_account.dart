@@ -57,9 +57,14 @@ class _MyAccountState extends State<MyAccount> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: Column(
+    return WillPopScope(
+      onWillPop: () async{
+        print("Back Button is pressed.");
+        return false;
+      },
+
+      child: Scaffold(
+        body: Column(
           children: <Widget> [
             UserAccountsDrawerHeader(
               currentAccountPicture: CircleAvatar(
@@ -69,7 +74,7 @@ class _MyAccountState extends State<MyAccount> {
               accountEmail: Text(loggedInUser.email !=null ? loggedInUser.email : " "),
             ),
 
-            SizedBox(height: 20),
+            SizedBox(height: 10),
             Text(
               'WelCome To DashBoard',
               style: TextStyle(
@@ -134,8 +139,8 @@ class _MyAccountState extends State<MyAccount> {
                     });
 
                     print("\n\n\n -----logout----->> "+widget.flag.toString());
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context)=> StoreListPage(flag: widget.flag),
+                    Navigator.of(context).push(MaterialPageRoute(                       // this ntg value is not used just for to match method signature
+                      builder: (context)=> StoreListPage(flag: widget.flag, logButton: "ntg"),
                     ));
                   },
 
@@ -147,18 +152,36 @@ class _MyAccountState extends State<MyAccount> {
 
             Expanded(
               child: Container(
-                color: Colors.grey,
+                //margin: EdgeInsets.only(left: 10.0, right: 10.0,),
 
-                child: StreamBuilder<QuerySnapshot>(
-                    stream: _storeListVM.storeAsStream,
-                    builder: (context, snapshot){
-                      if(snapshot.hasData && snapshot.data.docs.isNotEmpty){
-                        return _buildList(snapshot.data);
+
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(15),
+                    topLeft: Radius.circular(15),
+
+                  ),
+                  border: Border.all(
+                    width: 3,
+                    color: Colors.green,
+                    style: BorderStyle.solid,
+                  ),
+                ),
+
+                child: Padding(
+                  padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 0.0),
+                  child: StreamBuilder<QuerySnapshot>(
+                      stream: _storeListVM.storeAsStream,
+                      builder: (context, snapshot){
+                        if(snapshot.hasData && snapshot.data.docs.isNotEmpty){
+                          return _buildList(snapshot.data);
+                        }
+                        else {
+                          return Center(child: CircularProgressIndicator());
+                        }
                       }
-                      else {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                    }
+                  ),
                 ),
 
               ),
@@ -213,11 +236,12 @@ class _MyAccountState extends State<MyAccount> {
             children: <Widget> [
               Center(child: Text("Scroll down")),
               Center(child: Text("to find your store")),
-              SizedBox(height: 50.0,),
+              //SizedBox(height: 50.0,),
 
-              Container(
-                child: Text("App is under construction."),
-              ),
+              SizedBox(height: 50.0),
+              Text("App is still under"),
+              Text("construction"),
+
 
             ],
           ),
@@ -264,17 +288,20 @@ class _MyAccountState extends State<MyAccount> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget> [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15.0),
-              child: Image(
-                height: 100.0,
-                width: 152.0,
-                image: NetworkImage(store.imagePath),
-                fit: BoxFit.cover,
+            Expanded(
+              flex: 3,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15.0),
+                child: Image(
+                  height: 100.0,
+                  width: 152.0,
+                  image: NetworkImage(store.imagePath),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Expanded(
-
+              flex: 2,
               child: Container(
                 margin: EdgeInsets.only(left: 15.0),
                 child: Column(
@@ -350,7 +377,7 @@ class _MyAccountState extends State<MyAccount> {
                       //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget> [
                         Padding(
-                          padding: EdgeInsets.only(left: 3.0),
+                          padding: EdgeInsets.only(left: 0.0),
                           child: Text(
                             '0.2 miles away',
                             //textAlign: TextAlign.center,

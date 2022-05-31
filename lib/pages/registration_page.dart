@@ -200,17 +200,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           },
         ),
       ),
-      body: Center(
+      body: GestureDetector(
+        onTap: () {
+
+          FocusManager.instance.primaryFocus.unfocus();
+        },
         child: SingleChildScrollView(
           child: Container(
             color: Colors.white,
             child: Padding(
-              padding: const EdgeInsets.all(36.0),
+              padding: const EdgeInsets.only(left: 36.0, right: 36.0, bottom: 36.0, top: 0.0,),
               child: Form(
                 key: _formKey,
                 child: Column(
 
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     /* SizedBox(
@@ -224,7 +228,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       radius: 56.0,
                       child: ClipRRect(
                         child:Image.asset(
-                          "images/logos.png",
+                          "images/logo.png",
                           fit: BoxFit.contain,
                           height: 100.0,
                           width: 100.0,
