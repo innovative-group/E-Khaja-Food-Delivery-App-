@@ -8,7 +8,7 @@ import 'package:firebase_sub_collection/models/accounts.dart';
 import 'package:firebase_sub_collection/pages/add_store_page.dart';
 import 'package:firebase_sub_collection/pages/login_page.dart';
 import 'package:firebase_sub_collection/pages/store_item_list_page.dart';
-import 'package:firebase_sub_collection/provider/myprovider.dart';
+import 'package:firebase_sub_collection/provider/homeCategory.dart';
 import 'package:firebase_sub_collection/utils/constants.dart';
 import 'package:firebase_sub_collection/view_models/add_store_view_model.dart';
 import 'package:firebase_sub_collection/view_models/store_list_view_model.dart';
@@ -134,6 +134,7 @@ class _StoreListPage extends State<StoreListPage> {
   void _navigateToStoreItems(BuildContext context, StoreViewModel store, bool hasInternet)
   {
     Navigator.push(context, MaterialPageRoute(builder: (context)=> StoreItemListPage(store, store.storeId, widget.flag, hasInternet)));
+
   }
 
 
@@ -375,9 +376,12 @@ class _StoreListPage extends State<StoreListPage> {
                       itemBuilder: (ctx, index)=>
                           _buildSingleCategory(
                               name: myProvider.getCategoryModelList[index].name,
-                              image: myProvider.getCategoryModelList[index].image),
+                              image: myProvider.getCategoryModelList[index].image,
+                              location: myProvider.getCategoryModelList[index].location,
+                              resturantName: myProvider.getCategoryModelList[index].resturantName,
+                          ),
 
-                    ),
+                      ),
                   ),
                 ],
               ),
@@ -394,7 +398,7 @@ class _StoreListPage extends State<StoreListPage> {
 
 
 
-  Widget _buildSingleCategory({String image, String name}) {
+  Widget _buildSingleCategory({String image, String name, String location, String resturantName}) {
 
     //print("\n\n\n ---------------->> "+ image + "\n\n\n");
     return Container(
@@ -467,7 +471,7 @@ class _StoreListPage extends State<StoreListPage> {
                         ),
                         SizedBox(height: 4.0),
                         Text(
-                          "resturant 1",
+                          resturantName,
                           style: TextStyle(
                             fontSize: 16.0,
                             fontWeight: FontWeight.w600,
@@ -476,7 +480,7 @@ class _StoreListPage extends State<StoreListPage> {
                         ),
                         SizedBox(height: 4.0),
                         Text(
-                          "Nov 20, 2019",
+                          location,
                           style: TextStyle(
                             //fontSize: 16.0,
                             fontWeight: FontWeight.w600,
@@ -559,7 +563,7 @@ class _StoreListPage extends State<StoreListPage> {
                   child: CircleAvatar(
                     maxRadius: 50,
                     backgroundImage:
-                    AssetImage("images/logo.png"),
+                    AssetImage("assets/images/logo.png"),
                   ),
                 ),
                 Expanded(
@@ -658,7 +662,7 @@ class _StoreListPage extends State<StoreListPage> {
           UserAccountsDrawerHeader(
             currentAccountPicture: CircleAvatar(
 
-              backgroundImage: AssetImage("images/logo.png", ),
+              backgroundImage: AssetImage("assets/images/logo.png", ),
             ),
             accountName: Text("We believe on service"),
             accountEmail: Text("and Customer satisfaction"),

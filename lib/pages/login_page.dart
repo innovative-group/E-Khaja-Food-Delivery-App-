@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 
 class LoginScreen extends StatefulWidget {
+
   const LoginScreen({Key key}) : super(key: key);
 
   @override
@@ -15,6 +16,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   // form key
+
+
+  int loginFlag= 1; //-------------------------->> flag to show/hide "update & delete" button in myAccount page(i.e dashboard)
   final _formKey = GlobalKey<FormState>();
 
   // editing controller
@@ -146,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       radius: 56.0,
                       child: ClipRRect(
                         child:Image.asset(
-                          "images/logo.png",
+                          "assets/images/logo.png",
                           fit: BoxFit.contain,
                           height: 100.0,
                           width: 100.0,
@@ -212,7 +216,7 @@ class _LoginScreenState extends State<LoginScreen> {
               //print("\n\n\n----------->> The uid value= $uid" + "\n\n"),
           Fluttertoast.showToast(msg: "Login Successful"),
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => MyAccount())),
+              MaterialPageRoute(builder: (context) => MyAccount(loginFlag: loginFlag,))),
         });
       } on FirebaseAuthException catch (error) {
         switch (error.code) {

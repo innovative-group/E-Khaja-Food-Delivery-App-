@@ -49,6 +49,9 @@ dependencies:
   internet_connection_checker: ^0.0.1+4
 
 
+  firebase_database: ^9.0.15
+
+
 
 
 dev_dependencies:
@@ -73,8 +76,13 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - images/profilePic.PNG
-    - images/logo.png
+    - assets/images/profilePic.PNG
+    - assets/images/logo.png
+    - assets/icons/addCartWhite.png
+    - assets/icons/addCartBlack.png
+    - assets/icons/
+
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:

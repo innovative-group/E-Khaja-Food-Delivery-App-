@@ -40,7 +40,6 @@ class StoreItem{
       doc["rating"],
     //  doc["imagePath"],
 
-
       doc.id,
     );
   }
