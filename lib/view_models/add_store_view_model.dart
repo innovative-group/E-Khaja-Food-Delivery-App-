@@ -24,7 +24,7 @@ class AddStoreViewModel extends ChangeNotifier{
     FirebaseFirestore.instance.collection("stores").add(store.toMap());
   }*/
 
-  Future<bool> saveStore(String imagePath, String loggedUser_uid)async{
+  Future<bool> saveStore(String imagePath, String loggedUser_uid, String storeId, String check)async{
 
     bool isSaved= false;
 
@@ -38,7 +38,12 @@ class AddStoreViewModel extends ChangeNotifier{
 
       //await FirebaseFirestore.instance.collection("stores").doc(loggedUser_uid).set(store.toMap()); ------------>> using this a person can only register one store[free version] if he/she
       // try to add new more store then the sem store will be override
-      await FirebaseFirestore.instance.collection("stores").doc().set(store.toMap());               //------------>> this statement will generate a document id everytime unique so user can create multiple store.
+      if(check== "update"){
+        await FirebaseFirestore.instance.collection("stores").doc(storeId)
+            .update(store.toMap());
+      }else {
+        await FirebaseFirestore.instance.collection("stores").doc().set(store.toMap());
+      }           //------------>> this statement will generate a document id everytime unique so user can create multiple store.
 
       isSaved= true;
       message= "Store has been Saved";

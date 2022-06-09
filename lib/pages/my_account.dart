@@ -13,7 +13,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MyAccount extends StatefulWidget {
-  MyAccount({Key key}) : super(key: key);
+
+  int loginFlag;
+  MyAccount({Key key, this.loginFlag}) : super(key: key);
 
   int flag= 1;
   @override
@@ -42,10 +44,13 @@ class _MyAccountState extends State<MyAccount> {
   }
 
 
-  void _navigateToAddStorePage(BuildContext context, String loggedInUserUid) {
+  void _navigateToAddStorePage(BuildContext context, String loggedInUserUid, [String storeId, String check, StoreViewModel store]) {
+
+
+    print("\n\n\n------------------------>> "+ storeId + "\n\n\n");
     Navigator.push(context, MaterialPageRoute(builder: (context)=> ChangeNotifierProvider(
       create: (context)=> AddStoreViewModel(),
-      child: AddStorePage(userId: loggedInUserUid),
+      child: AddStorePage(userId: loggedInUserUid, storeId: storeId, check: check, store: store),
 
     )
 
@@ -68,7 +73,7 @@ class _MyAccountState extends State<MyAccount> {
           children: <Widget> [
             UserAccountsDrawerHeader(
               currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage("images/profilePic.PNG"),
+                backgroundImage: AssetImage("assets/images/profilePic.PNG"),
               ),
               accountName: Text(loggedInUser.firstName !=null ? loggedInUser.firstName + " " + loggedInUser.secondName :   " "),
               accountEmail: Text(loggedInUser.email !=null ? loggedInUser.email : " "),
@@ -100,7 +105,7 @@ class _MyAccountState extends State<MyAccount> {
               children: [
                 FlatButton(
                   padding: EdgeInsets.symmetric(horizontal: 30.0),
-                  color: Theme.of(context).primaryColor,
+                  color: Colors.green,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
@@ -112,7 +117,7 @@ class _MyAccountState extends State<MyAccount> {
                     ),
                   ),
                   onPressed: () {
-                    _navigateToAddStorePage(context, loggedInUser.uid);
+                    _navigateToAddStorePage(context, loggedInUser.uid, "dummyData", "dummyData");
                     print("\n\n\n ------------_navigateToAddStorePage--------->> "+ loggedInUser.uid + "\n\n\n");
                   },
 
@@ -152,9 +157,8 @@ class _MyAccountState extends State<MyAccount> {
 
             Expanded(
               child: Container(
-                //margin: EdgeInsets.only(left: 10.0, right: 10.0,),
 
-
+                padding: EdgeInsets.only(bottom: 15.0,),
                 decoration: BoxDecoration(
                   color: Colors.grey,
                   borderRadius: BorderRadius.only(
@@ -197,7 +201,27 @@ class _MyAccountState extends State<MyAccount> {
 
 
   Widget _buildList(QuerySnapshot snapshot){
+
     final stores= snapshot.docs.map((doc)=> StoreViewModel.fromSnapshot(doc)).toList();
+
+    final list1= [];
+    final list= stores.forEach((element){
+
+
+      if(loggedInUser.uid == element.store.loggedInUser_uid) {
+       /* print("\n\n\n -------------| equal value | ---->> "+loggedInUser.uid+ "\n\n\nq;");
+        return _buildListItem(element, (store){
+          _navigateToStoreItems(context, store);
+
+        });*/
+
+        print(element.store.storeId);
+        list1.add(element);
+
+      }
+
+    });
+
     /*return ListView.builder(
       itemCount: stores.length,
       itemBuilder: (context, index){
@@ -214,13 +238,13 @@ class _MyAccountState extends State<MyAccount> {
       crossAxisCount: 2,
       mainAxisSpacing: 16,
       crossAxisSpacing: 16,
-      children: List.generate(stores.length, (index) {
-        final storeItem= stores[index];
-        final store= stores[index];
+      children: List.generate(list1.length, (index) {
+        //final storeItem= stores[index];
+        final store= list1[index];
 
 
         if(loggedInUser.uid == store.store.loggedInUser_uid) {
-          print("\n\n\n -------------| equal value | ---->> "+loggedInUser.uid);
+          print("\n\n\n -------------| equal value | ---->> "+loggedInUser.uid+ "\n\n\nq;");
           return _buildListItem(store, (store){
             _navigateToStoreItems(context, store);
           });
@@ -260,6 +284,8 @@ class _MyAccountState extends State<MyAccount> {
   }
 
 
+
+
   Widget _buildListItem(StoreViewModel store,   void Function(StoreViewModel)  onStoreSelected)
   {
     /* return ListTile(
@@ -286,14 +312,14 @@ class _MyAccountState extends State<MyAccount> {
           ),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget> [
             Expanded(
-              flex: 3,
+              flex: 4,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(15.0),
                 child: Image(
-                  height: 100.0,
+                 // height: 100.0,
                   width: 152.0,
                   image: NetworkImage(store.imagePath),
                   fit: BoxFit.cover,
@@ -301,24 +327,14 @@ class _MyAccountState extends State<MyAccount> {
               ),
             ),
             Expanded(
-              flex: 2,
+              flex:   2,
               child: Container(
                 margin: EdgeInsets.only(left: 15.0),
                 child: Column(
                   //mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    /* ListTile(
-                      leading: Icon(Icons.home),
-                      title: Text(
-                        store.resturantName,
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),*/
+
                     SizedBox(height: 5.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -329,19 +345,17 @@ class _MyAccountState extends State<MyAccount> {
                                 size: 12.0
                             )),
                         SizedBox(width: 10.0),
-                        Expanded(
-                          flex: 2,
-                          child: Container(
-                            //color: Colors.blue,
-                            child: Text(
-                              store.resturantName,
-                              style: TextStyle(
-                                fontSize: 12.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              overflow: TextOverflow.ellipsis,
+                        Container(
+                          //color: Colors.blue,
+                          child: Text(
+                            store.resturantName,
+                            style: TextStyle(
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.bold,
                             ),
-                          ),),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                       ],
                     ),
                     //RatingStars(restaurant.rating),
@@ -356,31 +370,10 @@ class _MyAccountState extends State<MyAccount> {
                               size: 12.0,
                             )),
                         SizedBox(width: 10.0),
-                        Expanded(
-                          flex: 2,
-                          child: Container(
-                            //color: Colors.blue,
-                            child: Text(
-                              store.location,
-                              style: TextStyle(
-                                fontSize: 12.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),),
-                      ],
-                    ),
-                    //SizedBox(height: 4.0),
-
-                    Row(
-                      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget> [
-                        Padding(
-                          padding: EdgeInsets.only(left: 0.0),
+                        Container(
+                          //color: Colors.blue,
                           child: Text(
-                            '0.2 miles away',
-                            //textAlign: TextAlign.center,
+                            store.location,
                             style: TextStyle(
                               fontSize: 12.0,
                               fontWeight: FontWeight.w600,
@@ -388,36 +381,6 @@ class _MyAccountState extends State<MyAccount> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-
-                        //SizedBox(height: 4.0),
-
-                        SizedBox(width: 10.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget> [
-                            Container(
-                              //color: Colors.green,
-                                child: Icon(Icons.discount,
-                                  size: 12.0,
-                                )),
-
-                            SizedBox(width: 5.0),
-                            Padding(
-                              padding: EdgeInsets.only(left: 3.0, top: 5.0),
-                              child: Text(
-                                //store.offer != "0" ? "Offer "+ store.offer : "",
-
-                                store.offer != "0" ?  store.offer : "",
-                                style: TextStyle(
-                                  fontSize: 12.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        )
-
                       ],
                     ),
 
@@ -449,6 +412,155 @@ class _MyAccountState extends State<MyAccount> {
                 ),
               ),
             ),
+
+            //SizedBox(height: 4.0),
+
+
+            Expanded(
+              flex:1,
+              child: widget.loginFlag== 1 ? Container(
+                padding: EdgeInsets.only(left: 5.0, bottom: 1.0, right: 5),
+                //color: Colors.yellow,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            _navigateToAddStorePage(context, loggedInUser.uid, store.storeId,  "update", store);
+                          },
+                          child: Container(
+                           // padding: EdgeInsets.only(top: 5.0, bottom: 5.0, left: 10.0, right: 10.0 ),
+                            //color: Colors.lightBlueAccent,
+                            child: Center(
+                              child: Text("Update",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+
+                            decoration: BoxDecoration(
+                              color: Colors.lightBlueAccent,
+                              borderRadius: BorderRadius.circular(5.0),
+                              border: Border.all(
+                                width: 1.0,
+                                color: Colors.grey[400],
+                              ),
+                            ),
+
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(width: 10),
+
+
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            showDialog<bool>(
+                              context: context,
+                              builder: (context)=> AlertDialog(
+                                title: Text('Do you want to delete the shop ? '),
+                                actions: [
+
+                                  ElevatedButton(
+                                      child: Text('Yes'),
+                                      onPressed: () {
+                                        FirebaseFirestore.instance.collection("stores").doc(store.storeId).delete();
+                                        print(" ---------->> resturantName= "+store.resturantName+"\n\n");
+                                        Navigator.pop(context);
+
+                                      }
+                                  ),
+
+                                  ElevatedButton(
+                                    child: Text('No'),
+                                    onPressed: ()=> Navigator.pop(context),
+                                  ),
+
+                                ],
+                              ),
+                            );
+
+                          },
+
+                          child: Container(
+                            //padding: EdgeInsets.only(top: 5.0, bottom: 5.0, left: 10.0, right: 10.0 ),
+                            //color: Colors.redAccent,
+                            child: Center(
+                              child: Text("Delete",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+
+                            decoration: BoxDecoration(
+                              color: Colors.redAccent,
+                              borderRadius: BorderRadius.circular(5.0),
+                              border: Border.all(
+                                width: 1.0,
+                                color: Colors.grey[400],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                    ]
+                ),
+              ): Row(
+                //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget> [
+                  Padding(
+                   // padding: EdgeInsets.only(left: 0.0),
+                    child: Text(
+                      '0.2 miles away',
+                      //textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+
+                  //SizedBox(height: 4.0),
+
+                  SizedBox(width: 10.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget> [
+                      Container(
+                        //color: Colors.green,
+                          child: Icon(Icons.discount,
+                            size: 12.0,
+                          )),
+
+                      SizedBox(width: 5.0),
+                      Padding(
+                        padding: EdgeInsets.only(left: 3.0, top: 5.0),
+                        child: Text(
+                          //store.offer != "0" ? "Offer "+ store.offer : "",
+
+                          store.offer != "0" ?  store.offer : "",
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  )
+
+
+                ],
+              ),
+            ),
+
 
           ],
         ),
