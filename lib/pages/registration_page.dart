@@ -228,7 +228,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       radius: 56.0,
                       child: ClipRRect(
                         child:Image.asset(
-                          "assets/images/logo.png",
+                          "images/logo.png",
                           fit: BoxFit.contain,
                           height: 100.0,
                           width: 100.0,

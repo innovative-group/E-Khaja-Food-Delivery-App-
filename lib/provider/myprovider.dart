@@ -11,15 +11,13 @@ class MyProvider with ChangeNotifier {
 
   Future<void> getCategoryProduct() async {
     List<CategoryModel> list = [];
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection("homecategory").get();
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(
+        "homecategory").get();
 
     querySnapshot.docs.forEach((categorydata) {
       categoryModel = CategoryModel(
         image: categorydata.get("image"),
         name: categorydata.get("name"),
-
-        location: categorydata.get("location"),
-        resturantName: categorydata.get("resturantName"),
 
       );
 

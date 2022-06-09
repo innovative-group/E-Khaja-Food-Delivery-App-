@@ -40,17 +40,7 @@ class Store{
   //----------------------------->> Singleton Factory Function <<-----------------
   factory Store.fromSnapshot(doc){
     //return Store(doc.data()["imagePath"], doc().data()["resturantName"],doc().data()["location"], doc().data()["offer"], doc().data()["rating"], doc.reference);
-   return Store(
-       doc.data()["uid"],
-       doc.data()["imagePath"],
-       doc.data()["resturantName"],
-       doc.data()["location"],
-       doc.data()["offer"],
-       doc.data()["rating"],
-       doc.data()["email"],
-       doc.data()["contact"],
-       doc.reference
-   );
+   return Store(doc.data()["uid"], doc.data()["imagePath"], doc.data()["resturantName"],doc.data()["location"], doc.data()["offer"], doc.data()["rating"], doc.data()["email"], doc.data()["contact"], doc.reference);
 
   }
 }
